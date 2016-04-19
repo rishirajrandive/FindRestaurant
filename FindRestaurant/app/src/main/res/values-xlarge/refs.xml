@@ -1,0 +1,6 @@
+<resources>
+
+    <item name="activity_masterdetail" type="layout">@layout/activity_twopane</item>
+
+</resources>
+
