@@ -3,6 +3,7 @@ package com.android.find.restaurant.data;
 import android.provider.BaseColumns;
 
 /**
+ * Contract for Favourite restaurants database
  * Created by rishi on 3/22/16.
  */
 public class RestaurantReaderContract {

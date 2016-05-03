@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.android.find.restaurant.Restaurant;
 import com.android.find.restaurant.data.RestaurantReaderContract.RestaurantEntry;
 
 import java.util.ArrayList;
@@ -15,12 +14,12 @@ import java.util.List;
 
 
 /**
+ * Database operations are done here
  * Created by rishi on 3/22/16.
  */
 public class RestaurantDbHelper extends SQLiteOpenHelper {
 
     public final static String TAG = "RestaurantDbHelper";
-    // If you change the database schema, you must increment the database version.
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "RestaurantReader.db";
 
@@ -49,6 +48,11 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
 
     private static RestaurantDbHelper sRestaurantDbHelper;
 
+    /**
+     * Returns instance for the class
+     * @param context
+     * @return
+     */
     public static RestaurantDbHelper getInstance(Context context){
         if(sRestaurantDbHelper == null){
             sRestaurantDbHelper = new RestaurantDbHelper(context);
@@ -56,6 +60,10 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         return sRestaurantDbHelper;
     }
 
+    /**
+     * Constructor for class
+     * @param context
+     */
     private RestaurantDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -68,19 +76,27 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 
+    /**
+     * Updates favourites
+     * @param restaurant
+     * @return
+     */
     public Boolean updateFavoriteRestaurant(Restaurant restaurant){
         Log.d(TAG, "Verify and update favorite restaurant");
-        if(isRestaurantExists(restaurant.getId())){
-            updateFavoriteStatus(restaurant.getId(), restaurant.isIsFavorite());
-        }else {
+        if(restaurant.isFavorite()){
             insertFavoriteRestaurant(restaurant);
+        }else {
+            deleteFavouriteRestaurant(restaurant.getId());
         }
         return true;
     }
 
+    /**
+     * Inserts favourites
+     * @param restaurant
+     */
     private void insertFavoriteRestaurant(Restaurant restaurant){
         Log.d(TAG, "Inserting values");
         SQLiteDatabase db = getWritableDatabase();
@@ -88,14 +104,14 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(RestaurantEntry.COLUMN_NAME_RESTURANT_ID, restaurant.getId());
         values.put(RestaurantEntry.COLUMN_NAME_BUSINESS_NAME, restaurant.getBusinessName());
-        values.put(RestaurantEntry.COLUMN_NAME_ADDRESS, restaurant.getDisplayAddr());
-        values.put(RestaurantEntry.COLUMN_NAME_FAVOURITE, restaurant.isIsFavorite());
+        values.put(RestaurantEntry.COLUMN_NAME_ADDRESS, restaurant.getDisplayAddress());
+        values.put(RestaurantEntry.COLUMN_NAME_FAVOURITE, restaurant.isFavorite());
         values.put(RestaurantEntry.COLUMN_NAME_ICON_URL, restaurant.getIconURL());
-        values.put(RestaurantEntry.COLUMN_NAME_LATLNG, restaurant.getmLatLong());
+        values.put(RestaurantEntry.COLUMN_NAME_LATLNG, restaurant.getLatLong());
         values.put(RestaurantEntry.COLUMN_NAME_PHONE, restaurant.getPhoneNumber());
         values.put(RestaurantEntry.COLUMN_NAME_RATING, restaurant.getRating());
         values.put(RestaurantEntry.COLUMN_NAME_REVIEW_COUNTS, restaurant.getReviewCounts());
-        values.put(RestaurantEntry.COLUMN_NAME_SNIPPET_IMG, restaurant.getmSnippetImageURL());
+        values.put(RestaurantEntry.COLUMN_NAME_SNIPPET_IMG, restaurant.getSnippetImageURL());
         values.put(RestaurantEntry.COLUMN_NAME_SNIPPET_TEXT, restaurant.getSnippetText());
 
         long newRowId;
@@ -107,6 +123,10 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Returns list of favourite items
+     * @return
+     */
     public List<Restaurant> fetchFavorites(){
 
         Log.d(TAG, "Fetching all the favorites");
@@ -120,14 +140,14 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
             Restaurant restaurant = new Restaurant();
             restaurant.setId(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_RESTURANT_ID)));
             restaurant.setBusinessName(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_BUSINESS_NAME)));
-            restaurant.setDisplayAddr(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_ADDRESS)));
-            restaurant.setIsFavorite(getBoolean(cursor, RestaurantEntry.COLUMN_NAME_FAVOURITE));
+            restaurant.setDisplayAddress(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_ADDRESS)));
+            restaurant.setFavorite(getBoolean(cursor, RestaurantEntry.COLUMN_NAME_FAVOURITE));
             restaurant.setIconURL(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_ICON_URL)));
-            restaurant.setmLatLong(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_LATLNG)));
+            restaurant.setLatLong(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_LATLNG)));
             restaurant.setPhoneNumber(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_PHONE)));
             restaurant.setRating(cursor.getFloat(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_RATING)));
             restaurant.setReviewCounts(cursor.getInt(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_REVIEW_COUNTS)));
-            restaurant.setmSnippetImageURL(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_SNIPPET_IMG)));
+            restaurant.setSnippetImageURL(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_SNIPPET_IMG)));
             restaurant.setSnippetText(cursor.getString(cursor.getColumnIndex(RestaurantEntry.COLUMN_NAME_SNIPPET_TEXT)));
 
             restaurantList.add(restaurant);
@@ -136,6 +156,12 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         return restaurantList;
     }
 
+    /**
+     * Utility function to get the boolean value.
+     * @param cursor
+     * @param columnName
+     * @return
+     */
     private boolean getBoolean(Cursor cursor, String columnName){
         if(cursor.getInt(cursor.getColumnIndex(columnName)) == 0){
             return false;
@@ -143,6 +169,11 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Checks if retaurant exists
+     * @param restaurantId
+     * @return
+     */
     public boolean isRestaurantExists(String restaurantId){
         SQLiteDatabase db = getReadableDatabase();
 
@@ -152,7 +183,7 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         String [] whereArgs = {restaurantId};
 
         Cursor cursor = db.query(RestaurantEntry.TABLE_NAME, projections, whereClause, whereArgs, null, null, null);
-        //Cursor cursor = db.rawQuery("SELECT * FROM "+ RestaurantEntry.TABLE_NAME + " WHERE restaurant_id =" + restaurantId, null);
+        //Cursor cursor = db.rawQuery("SECheckFavoriteLECT * FROM "+ RestaurantEntry.TABLE_NAME + " WHERE restaurant_id =" + restaurantId, null);
 
         cursor.moveToFirst();
         if(cursor.getCount() == 0){
@@ -162,16 +193,14 @@ public class RestaurantDbHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    private void updateFavoriteStatus(String restaurantId, boolean isFavorite){
+    /**
+     * Deletes entry for favourite restaurant.
+     * @param restaurantId
+     */
+    private void deleteFavouriteRestaurant(String restaurantId){
         SQLiteDatabase db = getReadableDatabase();
-
-        Log.d(TAG, "Running update");
-        ContentValues values = new ContentValues();
-        values.put(RestaurantEntry.COLUMN_NAME_FAVOURITE, isFavorite);
-
-        String whereClause = RestaurantEntry.COLUMN_NAME_RESTURANT_ID + "=?";
-        String [] whereArgs = {restaurantId};
-
-        db.update(RestaurantEntry.TABLE_NAME, values, whereClause, whereArgs);
+        String selection = RestaurantEntry.COLUMN_NAME_RESTURANT_ID + "=?";
+        String[] selectionArgs = {restaurantId};
+        db.delete(RestaurantEntry.TABLE_NAME, selection, selectionArgs);
     }
 }

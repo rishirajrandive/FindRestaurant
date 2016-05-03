@@ -14,9 +14,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name">
         <activity
-            android:name=".SearchActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".view.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,11 +24,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RestaurantPagerActivity"
+            android:name=".view.DetailPagerActivity"
             android:label="@string/details"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:configChanges="orientation|screenSize">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".SearchActivity"/>
+                android:value=".view.SearchActivity"/>
         </activity>
 
         <meta-data

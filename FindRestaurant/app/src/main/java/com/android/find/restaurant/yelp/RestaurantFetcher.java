@@ -7,7 +7,7 @@ package com.android.find.restaurant.yelp;
 import android.content.Context;
 import android.util.Log;
 
-import com.android.find.restaurant.Restaurant;
+import com.android.find.restaurant.data.Restaurant;
 import com.android.find.restaurant.data.RestaurantDbHelper;
 
 import org.json.JSONArray;
@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Example for accessing the RestaurantFetcher API.
+ * Fetches all the restaurants for new search or favourite search.
+ * Yelp API is used for fetching the details for restaurant for search.
+ * Some search parameters are hard coded such as radius filter and category filter.
  */
 public class RestaurantFetcher {
 
@@ -42,27 +44,36 @@ public class RestaurantFetcher {
 
     public final static String TAG = "RestaurantFetcher";
 
-    public static RestaurantFetcher get(Context context) {
+    /**
+     * Static method to return the instance if it is not created, as this is a singleton class.
+     * @param context
+     * @return
+     */
+    public static RestaurantFetcher getInstance(Context context) {
         if (sRestaurantFetcher == null) {
             sRestaurantFetcher = new RestaurantFetcher(context);
         }
         return sRestaurantFetcher;
     }
 
+    /**
+     * Internal private constructor invoked once.
+     * @param context
+     */
     private RestaurantFetcher(Context context){
-        this.mService = new ServiceBuilder().provider(YelpApi2.class).apiKey(CONSUMER_KEY).apiSecret(CONSUMER_SECRET).build();
+        this.mService = new ServiceBuilder().provider(YelpApi2Helper.class).apiKey(CONSUMER_KEY).apiSecret(CONSUMER_SECRET).build();
         this.mAccessToken = new Token(TOKEN, TOKEN_SECRET);
     }
 
     /**
-     * Search with term and location.
-     *
-     * @param term Search term
-     * @param latitude Latitude
-     * @param longitude Longitude
-     * @return JSON string response
+     * Search with term, location and sort by option and throws back the exception.
+     * @param term
+     * @param latitude
+     * @param longitude
+     * @param sort
+     * @return
      */
-    public List<Restaurant> search(String term, double latitude, double longitude, int sort) {
+    public List<Restaurant> search(String term, double latitude, double longitude, int sort) throws JSONException{
         OAuthRequest request = new OAuthRequest(Verb.GET, "http://api.yelp.com/v2/search");
         request.addQuerystringParameter("term", term);
         request.addQuerystringParameter("ll", latitude + "," + longitude);
@@ -73,22 +84,22 @@ public class RestaurantFetcher {
         Response response = request.send();
 
         mRestaurantList = new ArrayList<>();
-        try {
-            String jsonString = response.getBody();
-            Log.i(TAG, "Received JSON: " + jsonString);
-            JSONObject jsonBody = new JSONObject(jsonString);
-            parseItems(mRestaurantList, jsonBody);
-        } catch (JSONException je) {
-            Log.e(TAG, "Failed to parse JSON", je);
-        }
+        String jsonString = response.getBody();
+        JSONObject jsonBody = new JSONObject(jsonString);
+        parseItems(mRestaurantList, jsonBody);
         return mRestaurantList;
     }
 
+    /**
+     * Parse JSON received from the Yelp search.
+     * @param restaurantList
+     * @param jsonObject
+     * @throws JSONException
+     */
     private void parseItems(List<Restaurant> restaurantList, JSONObject jsonObject) throws JSONException{
         JSONArray businessesArray = jsonObject.getJSONArray("businesses");
 
         mTotalResults = (businessesArray.length() > mTotalResults ? mTotalResults : businessesArray.length());
-
         for (int i = 0; i < mTotalResults; i++) {
             JSONObject businessJsonObject = businessesArray.getJSONObject(i);
 
@@ -98,7 +109,7 @@ public class RestaurantFetcher {
             item.setRating(businessJsonObject.getInt("rating"));
             item.setIconURL(businessJsonObject.getString("image_url"));
             item.setReviewCounts(businessJsonObject.getInt("review_count"));
-            item.setmSnippetImageURL(businessJsonObject.getString("snippet_image_url"));
+            item.setSnippetImageURL(businessJsonObject.getString("snippet_image_url"));
             item.setSnippetText(businessJsonObject.getString("snippet_text"));
 
             if(businessJsonObject.has("phone")){
@@ -113,18 +124,27 @@ public class RestaurantFetcher {
             }
 
             JSONObject coordinateObject = locationObject.getJSONObject("coordinate");
-            item.setmLatLong(coordinateObject.getString("latitude") + "," + coordinateObject.getString("longitude"));
+            item.setLatLong(coordinateObject.getString("latitude") + "," + coordinateObject.getString("longitude"));
 
-            item.setDisplayAddr(address);
+            item.setDisplayAddress(address);
 
             restaurantList.add(item);
         }
     }
 
+    /**
+     * Method to return all the restaurants.
+     * @return
+     */
     public List<Restaurant> getAllRestaurants(){
         return mRestaurantList;
     }
 
+    /**
+     * Get a specific restaurant data.
+     * @param id
+     * @return
+     */
     public Restaurant getRestaurant(String id){
         for(Restaurant restaurant : mRestaurantList){
             if(restaurant.getId().equalsIgnoreCase(id)){
@@ -134,6 +154,11 @@ public class RestaurantFetcher {
         return null;
     }
 
+    /**
+     * Fetches favourites data from local database for favourite screen.
+     * @param context
+     * @return
+     */
     public List<Restaurant> fetchFavorites(Context context){
         mRestaurantList = RestaurantDbHelper.getInstance(context).fetchFavorites();
         return mRestaurantList;
