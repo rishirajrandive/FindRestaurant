@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:scaleType="fitCenter">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:padding="5dp">
+            <TextView android:id="@+id/restaurant_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Angelous Mexican grill adfad adfadf adfadf"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <RatingBar android:id="@+id/restaurant_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:numStars="5"
+                            android:stepSize="0.5"
+                            android:isIndicator="true"/>
+                        <TextView android:id="@+id/total_reviews"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:textSize="14dp"
+                            android:text="37 Reviews"
+
+                            android:paddingLeft="20dp"
+                            android:paddingRight="60dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:background="@drawable/contact_image"/>
+                        <TextView android:id="@+id/phone_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textSize="14dp"
+                            android:text="232302394"
+
+                            android:paddingTop="5dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <ToggleButton android:id="@+id/fav_toggle_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/favourite_icon"
+                    android:textOff=""
+                    android:textOn=""
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <ImageView android:id="@+id/static_map"
+                    android:layout_width="wrap_content"
+                    android:layout_height="210dp"
+                    android:background="@drawable/custom_border"/>
+                <TextView android:id="@+id/restaurant_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/custom_border"
+                    android:textStyle="bold"
+                    android:padding="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp">
+                <ImageView android:id="@+id/snippet_image"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp" />
+                <TextView android:id="@+id/snippet_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Hey"
+                    android:textSize="14dp"
+
+                    android:paddingLeft="4dp"/>
+            </LinearLayout>
+            <Button android:id="@+id/make_reservation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Make reservation"
+                android:textColor="@color/white"
+                android:background="@color/colorPrimary"/>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
