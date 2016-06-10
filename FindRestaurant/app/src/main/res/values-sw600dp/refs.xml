@@ -1,6 +1,0 @@
-<resources>
-
-    <item name="activity_dynamic" type="layout">@layout/activity_merge_tablet</item>
-
-</resources>
-

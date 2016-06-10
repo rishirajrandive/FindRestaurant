@@ -1,6 +1,0 @@
-<resources>
-
-    <item name="activity_dynamic" type="layout">@layout/activity_search_list</item>
-
-</resources>
-
