@@ -26,7 +26,7 @@ Android app to find restaurant based on location. App is based on Yelp APIs.
 
 <b> For first time, search page will show default search for All restaurants in San Jose location.</b><br>
 <br>
-<img height="700" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/searchpage.png"/>
+<img height="300" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/searchpage.png"/>
 </br>
 
 <b> Details page shown when user selects a restaurant from the list </b><br>
