@@ -23,22 +23,22 @@ Android app to find restaurant based on location. App uses [Yelp APIs](https://w
 
 ### Screen shots of app in action
 
-<img width="200" height="300" alt="For first time, search page will show default search for All restaurants in San Jose location" src="https://github.com/rishirajrandive/FindRestaurant/raw/master/images/searchpage.png"/>
+* For first time, search page will show default search for All restaurants in San Jose location
+<img width="100" height="400" alt="search" src="https://github.com/rishirajrandive/FindRestaurant/raw/master/images/searchpage.png"/>
 
 
-<b> Details page shown when user selects a restaurant from the list </b><br>
-<br>
-<img height="700" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/detail.png"/>
-</br>
+* Details page shown when user selects a restaurant from the list
 
-<b> Favorite list </b><br>
-<br>
-<img height="700" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/favorite.png"/>
-</br>
+<img width="100" height="400" alt="details" "src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/detail.png"/>
 
-<b> Button to make reservation </b><br>
-<br>
-<img height="700" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/makereservation.png"/>
+* Favorite list
+
+<img width="100" height="400" alt="favorite" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/favorite.png"/>
+
+
+* Button to make reservation
+
+<img width="100" height="400" alt="reservation" src="https://raw.githubusercontent.com/rishirajrandive/FindRestaurant/master/images/makereservation.png"/>
 </br>
 <br>
 
